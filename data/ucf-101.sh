@@ -4,7 +4,7 @@ rm UCF101.rar
 
 wget http://crcv.ucf.edu/data/UCF101/UCF101TrainTestSplits-RecognitionTask.zip
 unzip UCF101TrainTestSplits-RecognitionTask.zip
-rm unzip UCF101TrainTestSplits-RecognitionTask.zip
+rm UCF101TrainTestSplits-RecognitionTask.zip
 
 for video in `ls ucf101-videos`; do
   mkdir -p ucf101-frames/$video
