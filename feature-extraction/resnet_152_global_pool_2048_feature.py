@@ -11,7 +11,7 @@ from slim.preprocessing import vgg_preprocessing
 slim = tf.contrib.slim
 
 FRAME_HOME = '../data/ucf101-frames'
-FEATURE_HOME = 'ucf101-features'
+FEATURE_HOME = 'ucf101-global-pool-features'
 
 img = tf.placeholder(dtype=tf.float32)
 pre_img = vgg_preprocessing.preprocess_image(img, 224, 224, is_training=False)
