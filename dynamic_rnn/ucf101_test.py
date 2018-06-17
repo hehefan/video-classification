@@ -3,7 +3,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from config import FLAGS
-from model import FullyConnection
+from model import DynamicRNN
 
 ClassID = {}
 with open('../data/ucfTrainTestlist/classInd.txt', 'r') as f:
@@ -25,8 +25,12 @@ for video_name, class_id in video_label:
   video_feature = np.load(video_feature_path)
   dataset.append((video_feature, class_id))
 
-model = FullyConnection(feature_size=FLAGS.feature_size,
-                        num_classes=FLAGS.num_classes)
+model = DynamicRNN(feature_size=FLAGS.feature_size,
+                   num_layers=FLAGS.num_layers,
+                   max_video_length=FLAGS.max_video_length,
+                   num_classes=FLAGS.num_classes,
+                   cell_size=FLAGS.cell_size,
+                   use_lstm=FLAGS.use_lstm)
 
 with tf.Session() as sess:
   start_step = FLAGS.steps_per_checkpoint
@@ -40,9 +44,11 @@ with tf.Session() as sess:
       cnt = 0.0
       for feature, label in dataset:
         batch_label = [label]
-        #batch_feature = [np.mean(feature, axis=0)]  # average pooling
-        batch_feature = [np.max(feature, axis=0)]  # max pooling
-        feed_dict = {model.video_feature_ph: batch_feature, model.video_label_ph:batch_label}
+        batch_length = [feature.shape[0]]
+        pad = np.stack([np.zeros(FLAGS.feature_size)]*(FLAGS.max_video_length-feature.shape[0]))
+        feature = np.concatenate((feature, pad), axis=0)
+        batch_feature = [feature]
+        feed_dict = {model.frame_feature_ph: batch_feature, model.video_length_ph:batch_length, model.video_label_ph:batch_label}
         prediction = sess.run(model.prediction, feed_dict=feed_dict)[0]
         cnt += int(prediction == label)
       acc = cnt/len(dataset)

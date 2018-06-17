@@ -3,7 +3,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from config import FLAGS
-from model import FullyConnection
+from model import StaticRNN
 
 ClassID = {}
 with open('../data/ucfTrainTestlist/classInd.txt', 'r') as f:
@@ -23,10 +23,26 @@ for video_name, class_id in video_label:
   video_feature_name = video_name.split('.')[0] + '.npy'
   video_feature_path = os.path.join(FEATURE_HOME, video_feature_name)
   video_feature = np.load(video_feature_path)
+  video_length = video_feature.shape[0]
+  if video_length < FLAGS.video_length:
+    pad = np.stack([np.zeros(FLAGS.feature_size)]*(FLAGS.video_length-video_length))
+    video_feature = np.concatenate((pad, video_feature), axis=0)
+  elif video_length > FLAGS.video_length:
+    t = video_length/float(FLAGS.video_length)
+    idx = 0
+    features = []
+    for _ in range(FLAGS.video_length):
+      features.append(video_feature[int(round(idx))])
+      idx += t
+    video_feature = np.stack(features)
   dataset.append((video_feature, class_id))
 
-model = FullyConnection(feature_size=FLAGS.feature_size,
-                        num_classes=FLAGS.num_classes)
+model = StaticRNN(feature_size=FLAGS.feature_size,
+                  num_layers=FLAGS.num_layers,
+                  video_length=FLAGS.video_length,
+                  num_classes=FLAGS.num_classes,
+                  cell_size=FLAGS.cell_size,
+                  use_lstm=FLAGS.use_lstm)
 
 with tf.Session() as sess:
   start_step = FLAGS.steps_per_checkpoint
@@ -40,9 +56,8 @@ with tf.Session() as sess:
       cnt = 0.0
       for feature, label in dataset:
         batch_label = [label]
-        #batch_feature = [np.mean(feature, axis=0)]  # average pooling
-        batch_feature = [np.max(feature, axis=0)]  # max pooling
-        feed_dict = {model.video_feature_ph: batch_feature, model.video_label_ph:batch_label}
+        batch_feature = [feature]
+        feed_dict = {model.frame_feature_ph: batch_feature, model.video_label_ph:batch_label}
         prediction = sess.run(model.prediction, feed_dict=feed_dict)[0]
         cnt += int(prediction == label)
       acc = cnt/len(dataset)

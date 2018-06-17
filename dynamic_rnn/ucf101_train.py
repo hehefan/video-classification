@@ -3,7 +3,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from config import FLAGS
-from model import FullyConnection
+from model import DynamicRNN
 
 video_label = []
 with open('../data/ucfTrainTestlist/trainlist01.txt', 'r') as f:
@@ -21,14 +21,21 @@ for video_name, class_id in video_label:
   dataset.append((video_feature, class_id))
 
 training_steps_per_epoch = len(dataset) // FLAGS.batch_size
-model = FullyConnection(feature_size=FLAGS.feature_size,
-                        num_classes=FLAGS.num_classes,
-                        learning_rate=FLAGS.learning_rate,
-                        learning_rate_decay_factor=FLAGS.learning_rate_decay_factor,
-                        min_learning_rate=FLAGS.min_learning_rate,
-                        training_steps_per_epoch=training_steps_per_epoch,
-                        keep_prob=FLAGS.keep_prob,
-                        is_training=True)
+model = DynamicRNN(feature_size=FLAGS.feature_size,
+                   num_layers=FLAGS.num_layers,
+                   max_video_length=FLAGS.max_video_length,
+                   num_classes=FLAGS.num_classes,
+                   cell_size=FLAGS.cell_size, use_lstm=FLAGS.use_lstm,
+                   learning_rate=FLAGS.learning_rate,
+                   learning_rate_decay_factor=FLAGS.learning_rate_decay_factor,
+                   min_learning_rate=FLAGS.min_learning_rate,
+                   training_steps_per_epoch=training_steps_per_epoch,
+                   max_gradient_norm=FLAGS.max_gradient_norm,
+                   keep_prob=FLAGS.keep_prob,
+                   input_keep_prob=FLAGS.input_keep_prob,
+                   output_keep_prob=FLAGS.output_keep_prob,
+                   state_keep_prob=FLAGS.state_keep_prob,
+                   is_training=True)
 
 with tf.Session() as sess:
   ckpt = tf.train.get_checkpoint_state(FLAGS.checkpoint_dir)
@@ -44,13 +51,15 @@ with tf.Session() as sess:
     for start, end in zip(range(0, len(dataset), FLAGS.batch_size), range(FLAGS.batch_size, len(dataset), FLAGS.batch_size)):
       batch_feature = []
       batch_label = []
+      batch_length = []
       for i in range(start, end):
         feature, label = dataset[i]
-        # feature = np.mean(feature, axis=0)  # average pooling
-        feature = np.max(feature, axis=0)  # max pooling
         batch_label.append(label)
+        batch_length.append(feature.shape[0])
+        pad = np.stack([np.zeros(FLAGS.feature_size)]*(FLAGS.max_video_length-feature.shape[0]))
+        feature = np.concatenate((feature, pad), axis=0)
         batch_feature.append(feature)
-      feed_dict = {model.video_feature_ph: batch_feature, model.video_label_ph:batch_label}
+      feed_dict = {model.frame_feature_ph: batch_feature, model.video_length_ph:batch_length, model.video_label_ph:batch_label}
       loss, learning_rate, _ = sess.run([model.loss, model.learning_rate, model.train_op], feed_dict=feed_dict)
       step += 1
       if step % FLAGS.steps_per_checkpoint == 0:

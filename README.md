@@ -1,10 +1,29 @@
 # video-classification
 
-Two baseline models for video classification: RNN(frame level) and Average Pooling(video level).
+## Dynamic RNN
 
-The dataset should be a Python list. Each element in the list is a triplet (video_id, video_frames, video_label).
+Using all frames that a video exactly includes without padding.
 
-video_frames is a numpy array with shape (video_length, feature_size).
+## Static RNN
+Using a fixed number of frames. 
+
+If video length is greater than the fixed number, uniformly or randomly sampling is used.
+
+If video length is less than the fixed number, all frames are used and the video is padded by 'zero feature's.
+
+## Pooling
+
+### Average Pooling
+
+1. Uniformly sampling frames
+
+2. Randomly sampling frames
+
+### Max Pooling
+
+1. Uniformly sampling frames
+
+2. Randomly sampling frames
 
 Continuing...
 
