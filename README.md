@@ -1,10 +1,10 @@
 # video-classification
 
-## Dynamic RNN
+## Dynamic RNN (LSTM, GRU)
 
 Using all frames that a video exactly has without padding.
 
-## Static RNN
+## Static RNN (LSTM, GRU)
 Using a fixed number of frames. 
 
 If video length is greater than the fixed number, uniformly or randomly sampling is used.
@@ -15,7 +15,7 @@ If video length is less than the fixed number, all frames are used and the video
 
 ### Average Pooling
 
-1. Using all frames
+1. Using all frames.
 
 2. Uniformly sampling a fixed number of frames. If video length is less than the fixed number, all frames are used.
 
@@ -23,7 +23,7 @@ If video length is less than the fixed number, all frames are used and the video
 
 ### Max Pooling
 
-1. Using all frames
+1. Using all frames.
 
 2. Uniformly sampling a fixed number of frames. If video length is less than the fixed number, all frames are used.
 
