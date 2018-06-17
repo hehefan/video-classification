@@ -2,7 +2,7 @@
 
 ## Dynamic RNN
 
-Using all frames that a video exactly includes without padding.
+Using all frames that a video exactly has without padding.
 
 ## Static RNN
 Using a fixed number of frames. 
@@ -15,15 +15,19 @@ If video length is less than the fixed number, all frames are used and the video
 
 ### Average Pooling
 
-1. Uniformly sampling frames
+1. Using all frames
 
-2. Randomly sampling frames
+2. Uniformly sampling frames
+
+3. Randomly sampling frames
 
 ### Max Pooling
 
-1. Uniformly sampling frames
+1. Using all frames
 
-2. Randomly sampling frames
+2. Uniformly sampling frames
+
+3. Randomly sampling frames
 
 Continuing...
 
