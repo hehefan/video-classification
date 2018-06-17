@@ -17,17 +17,17 @@ If video length is less than the fixed number, all frames are used and the video
 
 1. Using all frames
 
-2. Uniformly sampling frames
+2. Uniformly sampling a fixed number of frames. If video length is less than the fixed number, all frames are used.
 
-3. Randomly sampling frames
+3. Randomly sampling a fixed number of frames. If video length is less than the fixed number, all frames are used.
 
 ### Max Pooling
 
 1. Using all frames
 
-2. Uniformly sampling frames
+2. Uniformly sampling a fixed number of frames. If video length is less than the fixed number, all frames are used.
 
-3. Randomly sampling frames
+3. Randomly sampling a fixed number of frames. If video length is less than the fixed number, all frames are used.
 
 Continuing...
 
