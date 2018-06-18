@@ -17,7 +17,7 @@ with open('../data/ucfTrainTestlist/testlist01.txt', 'r') as f:
     class_name, video_name = line.split('/')
     video_label.append((video_name.strip(), ClassID[class_name.strip()]))
 
-FEATURE_HOME = '../feature-extraction/ucf101-features'
+FEATURE_HOME = '../feature-extraction/ucf101-global-pool-2048-features'
 dataset = []
 for video_name, class_id in video_label:
   video_feature_name = video_name.split('.')[0] + '.npy'
