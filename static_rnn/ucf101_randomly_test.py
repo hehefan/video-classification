@@ -1,6 +1,7 @@
 import sys
 import os
 import numpy as np
+import random
 import tensorflow as tf
 from config import FLAGS
 from model import StaticRNN
