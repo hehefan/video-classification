@@ -29,6 +29,12 @@ If video length is less than the fixed number, all frames are used and the video
 
 3. Randomly sampling a fixed number of frames. If video length is less than the fixed number, all frames are used.
 
+### [ConvLSTM](https://arxiv.org/pdf/1506.04214v1.pdf)
+
+For ConvLSTM, inputs (frame/image features) and states are 3D tensors (Side, Side, Channel). 
+
+Instead of full connections, operations in ConvLSTM are convlutions.
+
 Continuing...
 
 If you find this code useful, please consider citing my video-related works:
