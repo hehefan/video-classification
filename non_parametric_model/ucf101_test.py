@@ -3,7 +3,6 @@ import os
 import numpy as np
 from sklearn.preprocessing import normalize
 import tensorflow as tf
-from config import FLAGS
 from model import NonParametricModel
 
 FEATURE_HOME = '../feature-extraction/ucf101-global-pool-2048-features'
