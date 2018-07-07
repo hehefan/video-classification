@@ -51,6 +51,8 @@ If you find this code useful, please consider citing my video-related works:
   author    = {Hehe Fan and Zhongwen Xu and Linchao Zhu and Chenggang Yan and Jianjun Ge and Yi Yang},
   title     = {Watching a Small Portion could be as Good as Watching All: Towards Efficient Video Classification},
   booktitle = {International Joint Conference on Artificial Intelligence, {IJCAI} 2018, Stockholm, Sweden, July 13-19, 2018},
-  year      = {2018}
+  pages     = {705--711},
+  year      = {2018},
+  doi       = {10.24963/ijcai.2018/98}
 }
 ```
